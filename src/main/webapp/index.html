@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>hasCode.com - Java EE 7 Websocket Tutorial</title>
+<title>Chat</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="Micha Kops">
@@ -82,6 +82,7 @@ body {
 
 	function onMessageReceived(evt) {
 		var msg = JSON.parse(evt.data); // native API
+		var dateReceived = new Date(msg.received);
 		var $messageLine = $('<tr><td class="received">' + msg.received
 				+ '</td><td class="user label label-info">' + msg.sender
 				+ '</td><td class="message badge">' + msg.message
@@ -119,7 +120,7 @@ body {
 		$('#enterRoom').click(function(evt) {
 			evt.preventDefault();
 			connectToChatserver();
-			$('.chat-wrapper h2').text('Chat # '+$nickName.val() + "@" + room);
+			$('.chat-wrapper h2').text('Chat name: ' + room + '. Your nick name: ' +$nickName.val());
 			$('.chat-signin').hide();
 			$('.chat-wrapper').show();
 			$message.focus();
@@ -146,9 +147,9 @@ body {
 			<div class="btn-group">
 				<label for="chatroom">Chatroom</label> <select size="1"
 					id="chatroom">
-					<option>#1</option>
-					<option>#2</option>
-					<option>#3</option>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
 				</select>
 			</div>
 			<button class="btn btn-large btn-primary" type="submit"
