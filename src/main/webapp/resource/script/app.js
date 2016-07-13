@@ -1,5 +1,12 @@
-require(
-  ['jquery'],
+require.config({
+  paths : {
+    jquery : "lib/jquery-1.10.2.min",
+    backbone : "lib/backbone-min",
+    underscore : "lib/underscore-min"
+  }
+});
+
+require( ['jquery'],
   function( $ ) {
     var wsocket;
     var serviceLocation = "ws://" + window.location.host + "/chat/";
@@ -64,9 +71,3 @@ require(
   }
 );
 
-
-require.config({
-  paths : {
-    jquery : "lib/jquery-1.10.2.min"
-  }
-});
