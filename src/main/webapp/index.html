@@ -51,8 +51,8 @@ body {
 }
 
 .received {
-	width: 160px;
-	font-size: 10px;
+	width: 120px;
+	font-size: 14px;
 }
 </style>
 <link href="./resource/css/bootstrap-responsive.css" rel="stylesheet">
@@ -74,7 +74,7 @@ body {
 <link rel="shortcut icon" href="./resource/ico/favicon.png">
 <script>
 	var wsocket;
-	var serviceLocation = "ws://10.10.34.162:8081/chat/";
+	var serviceLocation = "ws://" + window.location.host + "/chat/";
 	var $nickName;
 	var $message;
 	var $chatWindow;
@@ -98,7 +98,7 @@ body {
 
 	function connectToChatserver() {
 		room = $('#chatroom option:selected').val();
-		wsocket = new WebSocket(serviceLocation + room);
+		wsocket = new WebSocket(serviceLocation + room + "?nickname=" + $nickName.val());
 		wsocket.onmessage = onMessageReceived;
 	}
 

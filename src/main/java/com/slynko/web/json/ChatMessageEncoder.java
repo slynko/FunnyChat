@@ -6,7 +6,7 @@ import javax.json.Json;
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
@@ -23,19 +23,12 @@ public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
         return Json.createObjectBuilder()
                 .add("message", chatMessage.getMessage())
                 .add("sender", chatMessage.getSender())
-                .add("received", buildDateReceived(chatMessage.getReceived())).build()
+                .add("received", convertDate(chatMessage.getReceived())).build()
                 .toString();
     }
 
-    private String buildDateReceived(Date dateReceived) {
-        Calendar calendarReceived = Calendar.getInstance();
-        calendarReceived.setTime(dateReceived);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(calendarReceived.get(Calendar.HOUR_OF_DAY))
-                        .append(":").append(calendarReceived.get(Calendar.MINUTE))
-                        .append(" ").append(calendarReceived.get(Calendar.DAY_OF_MONTH))
-                        .append("/").append(calendarReceived.get(Calendar.MONTH))
-                        .append("/").append(calendarReceived.get(Calendar.YEAR));
-        return stringBuilder.toString();
+    private String convertDate(Date dateReceived) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm dd/mm/yyyy");
+        return dateFormat.format(dateReceived);
     }
 }

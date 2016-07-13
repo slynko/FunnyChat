@@ -11,15 +11,15 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ServerEndpoint(value="/chat/{room}", encoders = ChatMessageEncoder.class, decoders = ChatMessageDecoder.class)
 public class ChatEndpoint {
     private final Logger log = Logger.getLogger(getClass().getName());
-    private static Set<Session> sessionsSet = new HashSet<>();
+    private static Queue<Session> sessionsSet = new ConcurrentLinkedQueue<Session>();
 
     @OnOpen
     public void open(final Session session, @PathParam("room") final String room) {
@@ -41,5 +41,11 @@ public class ChatEndpoint {
         } catch (IOException | EncodeException e) {
             log.log(Level.WARNING, "onMessage failed", e);
         }
+    }
+    
+    private ChatMessage getIsConnectedMessage() {
+        ChatMessage isConnectedMessage = new ChatMessage();
+        //isConnectedMessage.set
+        return null;
     }
 }
