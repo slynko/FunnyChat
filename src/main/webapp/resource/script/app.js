@@ -1,13 +1,20 @@
 require.config({
   paths : {
-    jquery : "lib/jquery-1.10.2.min",
-    backbone : "lib/backbone-min",
-    underscore : "lib/underscore-min"
+    'jquery' : "lib/jquery-1.10.2.min",
+    'backbone' : "lib/backbone-min",
+    'underscore' : "lib/underscore-min",
+    'template': '../template',
+    'text' : 'lib/text'
+  },
+  map : {
+    '*' : {
+    }
   }
 });
 
-require( ['jquery'],
-  function( $ ) {
+require( ['jquery', 'require', 'view/view.chat', 'backbone'],
+  function( $, require, ChatView, Backbone ) {
+    ChatView.setElement($('.cont')).render();
     var wsocket;
     var serviceLocation = "ws://" + window.location.host + "/chat/";
     var $nickName;
