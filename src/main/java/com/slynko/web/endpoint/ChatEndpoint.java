@@ -11,6 +11,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
@@ -23,9 +24,11 @@ public class ChatEndpoint {
 
     @OnOpen
     public void open(final Session session, @PathParam("room") final String room) {
+        ChatMessage isConnectedMessage = getIsConnectedMessage(session.getRequestParameterMap().get("nickname").get(0));
+        session.getUserProperties().put("room", room);
+        onMessage(session, isConnectedMessage);
         sessionsSet.add(session);
         log.info("session opened and bound to room: " + room);
-        session.getUserProperties().put("room", room);
     }
 
     @OnMessage
@@ -42,10 +45,12 @@ public class ChatEndpoint {
             log.log(Level.WARNING, "onMessage failed", e);
         }
     }
-    
-    private ChatMessage getIsConnectedMessage() {
+
+    private ChatMessage getIsConnectedMessage(String connectedUserName) {
         ChatMessage isConnectedMessage = new ChatMessage();
-        //isConnectedMessage.set
-        return null;
+        isConnectedMessage.setMessage("Is connected.");
+        isConnectedMessage.setReceived(new Date());
+        isConnectedMessage.setSender(connectedUserName);
+        return isConnectedMessage;
     }
 }
