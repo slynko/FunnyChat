@@ -45,19 +45,19 @@ public class ChatEndpoint {
         }
     }
 
-    private ChatMessage getIsConnectedMessage(String connectedUserName) {
-        ChatMessage isConnectedMessage = new ChatMessage();
-        isConnectedMessage.setMessage(connectedUserName + " is connected.");
-        isConnectedMessage.setReceived(new Date());
-        isConnectedMessage.setSender("");
-        return isConnectedMessage;
-    }
-
     private void sendIsConnectedMessageToAll(final Session session, final String room) {
         ChatMessage isConnectedMessage = getIsConnectedMessage(
                 session.getRequestParameterMap().get("nickname")
                         .get(0));
         session.getUserProperties().put("room", room);
         onMessage(session, isConnectedMessage);
+    }
+
+    private ChatMessage getIsConnectedMessage(String connectedUserName) {
+        ChatMessage isConnectedMessage = new ChatMessage();
+        isConnectedMessage.setMessage(connectedUserName + " is connected.");
+        isConnectedMessage.setReceived(new Date());
+        isConnectedMessage.setSender("");
+        return isConnectedMessage;
     }
 }
