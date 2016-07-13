@@ -24,9 +24,7 @@ public class ChatEndpoint {
 
     @OnOpen
     public void open(final Session session, @PathParam("room") final String room) {
-        ChatMessage isConnectedMessage = getIsConnectedMessage(session.getRequestParameterMap().get("nickname").get(0));
-        session.getUserProperties().put("room", room);
-        onMessage(session, isConnectedMessage);
+        sendIsConnectedMessageToAll(session, room);
         sessionsSet.add(session);
         log.info("session opened and bound to room: " + room);
     }
@@ -48,9 +46,17 @@ public class ChatEndpoint {
 
     private ChatMessage getIsConnectedMessage(String connectedUserName) {
         ChatMessage isConnectedMessage = new ChatMessage();
-        isConnectedMessage.setMessage("Is connected.");
+        isConnectedMessage.setMessage(connectedUserName + " is connected.");
         isConnectedMessage.setReceived(new Date());
-        isConnectedMessage.setSender(connectedUserName);
+        isConnectedMessage.setSender("");
         return isConnectedMessage;
+    }
+
+    private void sendIsConnectedMessageToAll(final Session session, final String room) {
+        ChatMessage isConnectedMessage = getIsConnectedMessage(
+                session.getRequestParameterMap().get("nickname")
+                        .get(0));
+        session.getUserProperties().put("room", room);
+        onMessage(session, isConnectedMessage);
     }
 }
