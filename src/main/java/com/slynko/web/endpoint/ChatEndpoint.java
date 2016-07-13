@@ -11,16 +11,17 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @ServerEndpoint(value="/chat/{room}", encoders = ChatMessageEncoder.class, decoders = ChatMessageDecoder.class)
 public class ChatEndpoint {
     private final Logger log = Logger.getLogger(getClass().getName());
-    private static Queue<Session> sessionsSet = new ConcurrentLinkedQueue<Session>();
+    private static Set<Session> sessionsSet = Collections.synchronizedSet(new HashSet<>());
 
     @OnOpen
     public void open(final Session session, @PathParam("room") final String room) {
