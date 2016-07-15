@@ -4,7 +4,8 @@ require.config({
     'backbone' : "lib/backbone-min",
     'underscore' : "lib/underscore-min",
     'template': '../template',
-    'text' : 'lib/text'
+    'text' : 'lib/text',
+    'require': 'lib/require.js'
   },
   map : {
     '*' : {
@@ -12,11 +13,18 @@ require.config({
   }
 });
 
-require( ['jquery', 'require', 'view/view.chat', 'backbone'],
-  function( $, require, ChatView, Backbone ) {
-    ChatView.setElement($('.cont')).render();
+define(function(require) {
+    'use strict';
+
+    var LoginView = require('view/view.login');
+    
+    var loginViewContainer = $('.chat-main-wrapper');
+    var loginView = new LoginView();
+    loginView.setElement(loginViewContainer);
+    loginView.render();
+
     var wsocket;
-    var serviceLocation = "ws://" + window.location.host + "/chat/";
+    // var serviceLocation = "ws://" + window.location.host + "/chat/";
     var $nickName;
     var $message;
     var $chatWindow;
@@ -37,11 +45,11 @@ require( ['jquery', 'require', 'view/view.chat', 'backbone'],
       $message.val('').focus();
     }
 
-    function connectToChatserver() {
-      room = $('#chatroom option:selected').val();
-      wsocket = new WebSocket(serviceLocation + room + "?nickname=" + $nickName.val());
-      wsocket.onmessage = onMessageReceived;
-    }
+    // function connectToChatserver() {
+    //   room = $('#chatroom option:selected').val();
+    //   wsocket = new WebSocket(serviceLocation + room + "?nickname=" + $nickName.val());
+    //   wsocket.onmessage = onMessageReceived;
+    // }
 
     function leaveRoom() {
       wsocket.close();
@@ -52,20 +60,21 @@ require( ['jquery', 'require', 'view/view.chat', 'backbone'],
     }
 
     $(document).ready(function() {
-      $nickName = $('#nickname');
-      $message = $('#message');
-      $chatWindow = $('#response');
-      $('.chat-wrapper').hide();
-      $nickName.focus();
+      // $nickName = $('#nickname');
+      // $message = $('#message');
+      // $chatWindow = $('#response');
+      // $('.chat-wrapper').hide();
+      // $nickName.focus();
 
-      $('#enterRoom').click(function(evt) {
-        evt.preventDefault();
-        connectToChatserver();
-        $('.chat-wrapper h2').text('Chat name: ' + room + '. Your nick name: ' +$nickName.val());
-        $('.chat-signin').hide();
-        $('.chat-wrapper').show();
-        $message.focus();
-      });
+      // $('#enterRoom').click(function(evt) {
+      //   evt.preventDefault();
+      //   connectToChatserver();
+      //   $('.chat-wrapper h2').text('Chat name: ' + room + '. Your nick name: ' +$nickName.val());
+      //   $('.chat-signin').hide();
+      //   $('.chat-wrapper').show();
+      //   $message.focus();
+      // });
+      
       $('#do-chat').submit(function(evt) {
         evt.preventDefault();
         sendMessage()
