@@ -22,9 +22,9 @@ define(function(require) {
       loginView.render();
     },
     connectToRoom: function() {
-      var chatView = new ChatView();
-      this.bindModelAndElementToView(chatView, this.userModel, this.chatContainer);
-      chatView.render();
+        var chatView = new ChatView();
+        this.bindModelAndElementToView(chatView, this.userModel, this.chatContainer);
+        chatView.render();
     },
     bindModelAndElementToView: function(view, model, element) {
       view.setElement(element);

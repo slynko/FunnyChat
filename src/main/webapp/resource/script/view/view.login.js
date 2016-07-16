@@ -10,56 +10,33 @@ define(function(require) {
   var LoginView = Backbone.View.extend({
     template: _.template(template),
     events: {
-      'change #nickname': 'changeNickname',
-      'change #chatroom': 'changeChatRoom',
-      'submit .form-signin': 'navigateToChatRoom'
+      'submit .form-signin': 'login'
     },
     initialize: function(options) {
       this.options = options;
-      
-      this.message = $('#message');
-      this.chatWindow = $('#response');
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
 
-      this.afterRender();
-
       return this;
     },
-    navigateToChatRoom: function(e){
-      Backbone.history.navigate("!/chat/" + this.model.get('chatRoom'), true);
+    login: function(){
+      this.initializeModelFields();
+      
+      if (this.model.get('nickName') == 'undefinedUser') {
+        Backbone.history.navigate("!/login", true);
+      } else {
+        Backbone.history.navigate("!/chat/" + this.model.get('chatRoom'), true);
+      }
       return false;
     },
-    afterRender: function() {
+    initializeModelFields: function() {
       this.nickName = $('#nickname', this.$el);
       this.chatRoom = $('#chatroom', this.$el);
-    },
-    enterRoom: function(evt) {
-      evt.preventDefault();
-      this.connectToChatserver();
-      var room = this.chatRoom.val();
-
       
-      // $('.chat-wrapper h2').text('Chat name: ' + room + '. Your nick name: ' + this.nickName);
-      // $('.chat-signin').hide();
-      // $('.chat-wrapper').show();
-      //this.message.focus();
-    },
-    connectToChatserver: function () {
-      // var serviceLocation = "ws://" + window.location.host + "/chat/";
-      // var room = this.chatRoom.val();
-      // var wsocket = new WebSocket(serviceLocation + room + "?nickname=" + this.nickName);
-      // wsocket.onmessage = this.onMessageReceived;
-    },
-    changeNickname: function() {
       this.model.set({
-          nickName: this.nickName.val() 
-      });
-    },
-    changeChatRoom: function() {
-      this.model.set({
-        chatRoom: this.chatRoom.val()
+          nickName: this.nickName.val(),
+          chatRoom: this.chatRoom.val()
       });
     }
   });
