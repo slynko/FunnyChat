@@ -5,7 +5,7 @@ define(function(require) {
 
   var UserModel = Backbone.Model.extend({
     defaults: {
-      'nickName': 'undefinedUser',
+      'nickName': '',
       'chatRoom': '1'
     }
   });

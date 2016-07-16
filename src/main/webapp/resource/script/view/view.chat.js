@@ -4,14 +4,12 @@ define(function(require) {
   var Backbone = require('backbone'),
     _ = require('underscore'),
     template = require('text!template/chat-template.html'),
-    MessageView = require('view/view.message'),
-    MessageModel = require('model/model.message');
+    MessageView = require('view/view.message');
   
   var ChatView = Backbone.View.extend({
     template: _.template(template),
     events: {
-      'submit #do-chat': 'sendMessage',
-      'click #leave-room': 'leaveRoom'
+      'submit #do-chat': 'sendMessage'
     },
     initialize: function(options) {
       this.options = options;
@@ -42,10 +40,6 @@ define(function(require) {
       
       $('#message', this.$el).val('').focus();
       return false;
-    },
-    leaveRoom: function() {
-      this.wsocket.close();
-      Backbone.history.navigate("!/login", true);
     },
     getMessageJsonString: function() {
       var nickName = this.model.get('nickName');

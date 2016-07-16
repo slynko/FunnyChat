@@ -3,9 +3,7 @@ define(function(require) {
   
   var Backbone = require('backbone'),
     _ = require('underscore'),
-    template = require('text!template/login-template.html'),
-    ChatView = require('view/view.chat'),
-    UserModel = require('model/model.user');
+    template = require('text!template/login-template.html');
   
   var LoginView = Backbone.View.extend({
     template: _.template(template),
@@ -23,10 +21,10 @@ define(function(require) {
     login: function(){
       this.initializeModelFields();
       
-      if (this.model.get('nickName') == 'undefinedUser') {
-        Backbone.history.navigate("!/login", true);
-      } else {
+      if (this.model.get('nickName')) {
         Backbone.history.navigate("!/chat/" + this.model.get('chatRoom'), true);
+      } else {
+        Backbone.history.navigate("!/login", true);
       }
       return false;
     },
