@@ -4,7 +4,9 @@ define(function(require) {
   var Backbone = require('backbone'),
     _ = require('underscore'),
     template = require('text!template/chat-template.html'),
-    MessageView = require('view/view.message');
+    MessageView = require('view/view.message'),
+    UsersCollection = require('collection/collection.users'),
+    OnlineUsersView = require('view/view.online.user');
   
   var ChatView = Backbone.View.extend({
     template: _.template(template),
@@ -14,16 +16,31 @@ define(function(require) {
     initialize: function(options) {
       this.options = options;
       _.bindAll(this, 'onMessageReceived');
+      this.loggedInUsers = new UsersCollection();
+      this.listenTo(this.loggedInUsers, 'sync', this.handleSuccess);
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
       this.afterRender();
       return this;
     },
+    handleSuccess: function(c, jsonResponse) {
+      var self = this;
+      var loggedInUsers = jsonResponse.users;
+
+      loggedInUsers.forEach(function(user) {
+        self.loggedInUsers.append(user);
+      });
+    },
     afterRender: function() {
+      this.loggedInUsers.fetch();
+
       this.messagesView = new MessageView();
       this.messagesView.setElement('#response', this.$el);
-      
+
+      this.loggedInUsers = new OnlineUsersView();
+      this.loggedInUsers.setElement($('.online-users-panel ._onlineUsers', this.$el));
+
       var serviceLocation = "ws://" + window.location.host + "/chat/";
       this.wsocket = new WebSocket(serviceLocation + this.model.get('chatRoom')
           + "?nickname=" + this.model.get('nickName'));

@@ -12,9 +12,11 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,8 +55,16 @@ public class ChatEndpoint {
         String nickName = session.getRequestParameterMap().get("nickname").get(0);
         ChatMessage hasDisconnectedMessage = getHasDisconnectedMessage(nickName);
         sendMessageToAll(session, room, hasDisconnectedMessage);
-        sessionsSet.add(session);
+        sessionsSet.remove(session);
         log.info("session closed and unbound to room: " + room);
+    }
+
+    public static List<String> getLoggedInUsers() {
+        List<String> loggedInUsers = new ArrayList<>();
+        for (Session s : sessionsSet) {
+            loggedInUsers.add(s.getRequestParameterMap().get("nickname").get(0));
+        }
+        return loggedInUsers;
     }
 
     private void sendMessageToAll(final Session session, final String room, ChatMessage message) {

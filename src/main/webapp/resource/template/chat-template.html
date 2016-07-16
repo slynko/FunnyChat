@@ -1,9 +1,13 @@
 <div class="custom-container container chat-wrapper">
     <nav class="navbar navbar-default custom-navbar-text">
         <div class="container-fluid">
-            <p class="navbar-text _nickname">Logged in as <%= nickName %></p>
+            <p class="navbar-text _nickname">Logged in as <span class="text-info"><b><%= nickName %></b></span></p>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                <li>
+                    <a href="/"><span class="glyphicon glyphicon-log-out"></span>
+                        Logout
+                    </a>
+                </li>
             </ul>
         </div>
     </nav>
@@ -24,7 +28,7 @@
             <legend class="legend-message">Enter your message..</legend>
             <div class="panel-footer">
                 <div class="input-group">
-                    <input id="message" type="text" class="form-control" placeholder="Type your message here..."/>
+                    <input id="message" type="text" class="form-control" placeholder="Type your message here..." required/>
                         <span class="input-group-btn">
                             <button class="btn btn-warning" id="btn-chat">
                                 Send</button>
