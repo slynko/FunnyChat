@@ -24,7 +24,9 @@ define(function(require) {
       if (this.model.get('nickName')) {
         Backbone.history.navigate("!/chat/" + this.model.get('chatRoom'), true);
       } else {
-        Backbone.history.navigate("!/login", true);
+        var emptyNickNameContainer = $('._emptyNickName', this.$el);
+        emptyNickNameContainer.html('Your nickname is empty');
+        emptyNickNameContainer.show();
       }
       return false;
     },

@@ -1,17 +1,16 @@
 <div class="container chat-signin">
     <form class="form-signin">
         <h2 class="form-signin-heading">Chat sign in</h2>
-        <label for="nickname">Nickname</label>
-        <input type="text" class="input-block-level" placeholder="Nickname" id="nickname" data-name="nickname">
-        <div class="btn-group">
-            <label for="chatroom">Chatroom</label>
-            <select size="1" id="chatroom" data-name="chatroom">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-            </select>
-        </div>
-        <button class="btn btn-large btn-primary" type="submit"
+        <input type="text" class="form-control" placeholder="Nickname" id="nickname" required>
+        <label for="chatroom">Chatroom</label>
+        <select size="1" id="chatroom" data-name="chatroom" class="form-control">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+        </select>
+
+        <br />
+        <button class="btn btn-lg btn-primary btn-block" type="submit"
                 id="enterRoom">Sign in</button>
     </form>
 </div>

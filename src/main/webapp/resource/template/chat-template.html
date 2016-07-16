@@ -1,15 +1,23 @@
 <div class="container chat-wrapper">
+    <nav class="navbar navbar-default custom-navbar-text">
+        <div class="container-fluid">
+            <p class="navbar-text">Logged in as <%= nickName %></p>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            </ul>
+        </div>
+    </nav>
     <form id="do-chat">
-        <h2 class="alert alert-success">Chat room: <%= chatRoom %>. Your nick name: <%= nickName %> </h2>
         <table id="response" class="table table-bordered"></table>
         <fieldset>
-            <legend>Enter your message..</legend>
+            <legend class="legend-message">Enter your message..</legend>
             <div class="controls">
-                <input type="text" class="input-block-level" placeholder="Your message..." id="message" style="height:60px"/>
-                <input type="submit" class="btn btn-large btn-block btn-primary"
-                       value="Send message" />
-                <a href="/" class="btn btn-large btn-block" type="button">Leave
-                    room</a>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="message" placeholder="Your message...">
+                      <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit" id="sendButton">Send</button>
+                      </span>
+                </div>
             </div>
         </fieldset>
     </form>

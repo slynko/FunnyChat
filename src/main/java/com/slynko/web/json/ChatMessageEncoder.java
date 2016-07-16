@@ -28,7 +28,7 @@ public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
     }
 
     private String convertDate(Date dateReceived) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm dd/mm/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm MMM dd, yyyy");
         return dateFormat.format(dateReceived);
     }
 }
