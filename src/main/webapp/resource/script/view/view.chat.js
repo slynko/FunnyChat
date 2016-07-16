@@ -31,7 +31,11 @@ define(function(require) {
     },
     onMessageReceived: function(evt) {
       var messageJson = JSON.parse(evt.data); // native API
+      messageJson.myNickname = this.model.get('nickName');
       this.messagesView.append(messageJson);
+
+      var $cont = $('.panel-body');
+      $cont[0].scrollTop = $cont[0].scrollHeight;
     },
     sendMessage: function() {
       var messageJsonString = this.getMessageJsonString();
