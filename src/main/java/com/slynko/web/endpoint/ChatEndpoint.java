@@ -5,6 +5,7 @@ import com.slynko.web.json.ChatMessageDecoder;
 import com.slynko.web.json.ChatMessageEncoder;
 
 import javax.websocket.EncodeException;
+import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -25,7 +26,9 @@ public class ChatEndpoint {
 
     @OnOpen
     public void open(final Session session, @PathParam("room") final String room) {
-        sendIsConnectedMessageToAll(session, room);
+        String nickName = session.getRequestParameterMap().get("nickname").get(0);
+        ChatMessage hasConnectedMessage = getHasConnectedMessage(nickName);
+        sendMessageToAll(session, room, hasConnectedMessage);
         sessionsSet.add(session);
         log.info("session opened and bound to room: " + room);
     }
@@ -45,19 +48,37 @@ public class ChatEndpoint {
         }
     }
 
-    private void sendIsConnectedMessageToAll(final Session session, final String room) {
-        ChatMessage isConnectedMessage = getIsConnectedMessage(
-                session.getRequestParameterMap().get("nickname")
-                        .get(0));
-        session.getUserProperties().put("room", room);
-        onMessage(session, isConnectedMessage);
+    @OnClose
+    public void close(final Session session, @PathParam("room") final String room) {
+        String nickName = session.getRequestParameterMap().get("nickname").get(0);
+        ChatMessage hasDisconnectedMessage = getHasDisconnectedMessage(nickName);
+        sendMessageToAll(session, room, hasDisconnectedMessage);
+        sessionsSet.add(session);
+        log.info("session closed and unbound to room: " + room);
     }
 
-    private ChatMessage getIsConnectedMessage(String connectedUserName) {
-        ChatMessage isConnectedMessage = new ChatMessage();
-        isConnectedMessage.setMessage(connectedUserName + " is connected.");
-        isConnectedMessage.setReceived(new Date());
-        isConnectedMessage.setSender("");
-        return isConnectedMessage;
+    private void sendMessageToAll(final Session session, final String room, ChatMessage message) {
+        session.getUserProperties().put("room", room);
+        onMessage(session, message);
+    }
+
+    private ChatMessage getHasConnectedMessage(String connectedUserName) {
+        ChatMessage hasConnectedMessage = initializeChatMessage();
+        hasConnectedMessage.setMessage(connectedUserName + " has connected.");
+        return hasConnectedMessage;
+    }
+
+    private ChatMessage getHasDisconnectedMessage(String connectedUserName) {
+        ChatMessage hasDisconnectedMessage = initializeChatMessage();
+        hasDisconnectedMessage.setMessage(connectedUserName + " has disconnected.");
+        return hasDisconnectedMessage;
+    }
+
+    private ChatMessage initializeChatMessage() {
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessage("");
+        chatMessage.setReceived(new Date());
+        chatMessage.setSender("");
+        return chatMessage;
     }
 }
