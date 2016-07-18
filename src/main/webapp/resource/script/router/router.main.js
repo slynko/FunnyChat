@@ -1,11 +1,11 @@
 define(function(require) {
   'use strict';
 
-  var Backbone  = require('backbone'),
+  var Backbone = require('backbone'),
     LoginView = require('view/view.login'),
     ChatView = require('view/view.chat'),
     UserModel = require('model/model.user');
-  
+
   var MainRouter = Backbone.Router.extend({
     initialize: function() {
       this.chatContainer = $('.chat-main-wrapper');
@@ -22,15 +22,20 @@ define(function(require) {
       loginView.render();
     },
     connectToRoom: function() {
+      if (this.userModel.get('nickName')) {
         var chatView = new ChatView();
         this.bindModelAndElementToView(chatView, this.userModel, this.chatContainer);
         chatView.render();
+      }
+      else {
+        this.navigate('!/login', true);
+      }
     },
     bindModelAndElementToView: function(view, model, element) {
       view.setElement(element);
       view.model = model;
     }
   });
-  
+
   return MainRouter;
 });

@@ -6,6 +6,7 @@ import com.slynko.web.json.ChatMessageEncoder;
 
 import javax.websocket.EncodeException;
 import javax.websocket.OnClose;
+import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
@@ -52,11 +53,17 @@ public class ChatEndpoint {
 
     @OnClose
     public void close(final Session session, @PathParam("room") final String room) {
+        sessionsSet.remove(session);
         String nickName = session.getRequestParameterMap().get("nickname").get(0);
         ChatMessage hasDisconnectedMessage = getHasDisconnectedMessage(nickName);
         sendMessageToAll(session, room, hasDisconnectedMessage);
-        sessionsSet.remove(session);
         log.info("session closed and unbound to room: " + room);
+    }
+
+    @OnError
+    public void error(Throwable t) {
+        log.log(Level.SEVERE, t.getMessage());
+        log.log(Level.SEVERE, "Connection error.");
     }
 
     public static List<String> getLoggedInUsers() {
