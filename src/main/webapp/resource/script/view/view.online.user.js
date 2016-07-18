@@ -10,10 +10,16 @@ define(function(require) {
     initialize: function(options) {
       this.options = options;
     },
+    render: function(loggedInUsers) {
+      var self = this;
+      loggedInUsers.forEach(function(user) {
+        self.append(user);
+      });
+    },
     append: function(nickname) {
       var onlineUser = {
         'nickname': nickname
-      }
+      };
       this.$el.append(this.template(onlineUser));
       return this;
     }

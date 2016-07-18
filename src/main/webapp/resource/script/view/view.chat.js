@@ -15,7 +15,7 @@ define(function(require) {
     },
     initialize: function(options) {
       this.options = options;
-      _.bindAll(this, 'onMessageReceived');
+      _.bindAll(this, 'onMessageReceived', 'handleSuccess');
       this.loggedInUsers = new UsersCollection();
       this.listenTo(this.loggedInUsers, 'sync', this.handleSuccess);
     },
@@ -25,12 +25,8 @@ define(function(require) {
       return this;
     },
     handleSuccess: function(c, jsonResponse) {
-      var self = this;
       var loggedInUsers = jsonResponse.users;
-
-      loggedInUsers.forEach(function(user) {
-        self.loggedInUsers.append(user);
-      });
+      this.loggedInUsers.render(loggedInUsers);
     },
     afterRender: function() {
       this.loggedInUsers.fetch();
@@ -45,6 +41,8 @@ define(function(require) {
       this.wsocket = new WebSocket(serviceLocation + this.model.get('chatRoom')
           + "?nickname=" + this.model.get('nickName'));
       this.wsocket.onmessage = this.onMessageReceived;
+
+      $('#message', this.$el).focus();
     },
     onMessageReceived: function(evt) {
       var messageJson = JSON.parse(evt.data); // native API
