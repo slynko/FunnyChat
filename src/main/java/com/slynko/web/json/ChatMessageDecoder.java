@@ -10,6 +10,11 @@ import javax.websocket.EndpointConfig;
 import java.io.StringReader;
 import java.util.Date;
 
+import static com.slynko.web.json.constants.MessageFields.HAS_CONNECTED;
+import static com.slynko.web.json.constants.MessageFields.HAS_DISCONNECTED;
+import static com.slynko.web.json.constants.MessageFields.MESSAGE;
+import static com.slynko.web.json.constants.MessageFields.SENDER;
+
 public class ChatMessageDecoder implements Decoder.Text<ChatMessage> {
 
     @Override
@@ -24,8 +29,10 @@ public class ChatMessageDecoder implements Decoder.Text<ChatMessage> {
         ChatMessage chatMessage = new ChatMessage();
         JsonObject jsonObject = Json.createReader(new StringReader(textMessage))
                 .readObject();
-        chatMessage.setMessage(jsonObject.getString("message"));
-        chatMessage.setSender(jsonObject.getString("sender"));
+        chatMessage.setMessage(jsonObject.getString(MESSAGE));
+        chatMessage.setSender(jsonObject.getString(SENDER));
+        chatMessage.setConnected(Boolean.parseBoolean(jsonObject.getString(HAS_CONNECTED)));
+        chatMessage.setDisconnected(Boolean.parseBoolean(jsonObject.getString(HAS_DISCONNECTED)));
         chatMessage.setReceived(new Date());
         return chatMessage;
     }

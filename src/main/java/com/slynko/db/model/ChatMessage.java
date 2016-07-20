@@ -6,6 +6,8 @@ public class ChatMessage {
     private String message;
     private String sender;
     private Date received;
+    private boolean hasConnected;
+    private boolean hasDisconnected;
 
     public String getMessage() {
         return message;
@@ -29,5 +31,21 @@ public class ChatMessage {
 
     public void setReceived(Date received) {
         this.received = received;
+    }
+
+    public boolean hasConnected() {
+        return hasConnected;
+    }
+
+    public void setConnected(boolean hasConnected) {
+        this.hasConnected = hasConnected;
+    }
+
+    public boolean hasDisconnected() {
+        return hasDisconnected;
+    }
+
+    public void setDisconnected(boolean hasDisconnected) {
+        this.hasDisconnected = hasDisconnected;
     }
 }

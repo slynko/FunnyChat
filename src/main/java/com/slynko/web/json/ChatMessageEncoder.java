@@ -9,6 +9,12 @@ import javax.websocket.EndpointConfig;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.slynko.web.json.constants.MessageFields.DATE_RECEIVED;
+import static com.slynko.web.json.constants.MessageFields.HAS_CONNECTED;
+import static com.slynko.web.json.constants.MessageFields.HAS_DISCONNECTED;
+import static com.slynko.web.json.constants.MessageFields.MESSAGE;
+import static com.slynko.web.json.constants.MessageFields.SENDER;
+
 public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
     @Override
     public void init(final EndpointConfig config) {
@@ -21,13 +27,16 @@ public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
     @Override
     public String encode(final ChatMessage chatMessage) throws EncodeException {
         return Json.createObjectBuilder()
-                .add("message", chatMessage.getMessage())
-                .add("sender", chatMessage.getSender())
-                .add("received", convertDate(chatMessage.getReceived())).build()
+                .add(MESSAGE, chatMessage.getMessage())
+                .add(SENDER, chatMessage.getSender())
+                .add(DATE_RECEIVED, convertDateToString(chatMessage.getReceived()))
+                .add(HAS_CONNECTED, chatMessage.hasConnected())
+                .add(HAS_DISCONNECTED, chatMessage.hasDisconnected())
+                .build()
                 .toString();
     }
 
-    private String convertDate(Date dateReceived) {
+    private String convertDateToString(Date dateReceived) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm MMM dd, yyyy");
         return dateFormat.format(dateReceived);
     }

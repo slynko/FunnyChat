@@ -37,9 +37,9 @@ define(function(require) {
       this.loggedInUsers = new OnlineUsersView();
       this.loggedInUsers.setElement($('.online-users-panel ._onlineUsers', this.$el));
 
-      var serviceLocation = "ws://" + window.location.host + "/chat/";
+      var serviceLocation = "ws://" + window.location.host + "/chat/" ;
       this.wsocket = new WebSocket(serviceLocation + this.model.get('chatRoom')
-          + "?nickname=" + this.model.get('nickName'));
+          + "/" + this.model.get('nickName'));
       this.wsocket.onmessage = this.onMessageReceived;
 
       $('#message', this.$el).focus();
@@ -48,7 +48,13 @@ define(function(require) {
       var messageJson = JSON.parse(evt.data); // native API
       messageJson.myNickname = this.model.get('nickName');
       this.messagesView.append(messageJson);
-
+      
+      if (messageJson.hasConnected) {
+        this.loggedInUsers.append(messageJson.sender);
+      } else if (messageJson.hasDisconnected) {
+        this.loggedInUsers.remove(messageJson.sender);
+      }
+      
       var $cont = $('.panel-body');
       $cont[0].scrollTop = $cont[0].scrollHeight;
     },
@@ -65,7 +71,7 @@ define(function(require) {
       var message = $('#message', this.$el).val();
       
       var messageJsonString = '{"message":"' + message + '", "sender":"'
-        + nickName + '", "received":""}';
+        + nickName + '", "received":"", "hasConnected":"", "hasDisconnected":""}';
       
       return messageJsonString;
     }

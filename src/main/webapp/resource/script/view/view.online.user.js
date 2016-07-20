@@ -22,8 +22,11 @@ define(function(require) {
       };
       this.$el.append(this.template(onlineUser));
       return this;
+    },
+    remove: function(nickname) {
+      var removingElement = $('#' + nickname, this.$el);
+      removingElement.remove();
     }
-
   });
   
   return OnlineUserView;

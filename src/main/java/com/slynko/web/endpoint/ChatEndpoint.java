@@ -22,53 +22,53 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@ServerEndpoint(value="/chat/{room}", encoders = ChatMessageEncoder.class, decoders = ChatMessageDecoder.class)
+@ServerEndpoint(value="/chat/{room}/{nickname}", encoders = ChatMessageEncoder.class, decoders = ChatMessageDecoder.class)
 public class ChatEndpoint {
     private final Logger log = Logger.getLogger(getClass().getName());
-    private static Set<Session> sessionsSet = Collections.synchronizedSet(new HashSet<>());
+    private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
 
     @OnOpen
-    public void open(final Session session, @PathParam("room") final String room) {
-        String nickName = session.getRequestParameterMap().get("nickname").get(0);
-        ChatMessage hasConnectedMessage = getHasConnectedMessage(nickName);
+    public void open(final Session session, @PathParam("room") final String room,
+                     @PathParam("nickname") final String nickname) {
+        ChatMessage hasConnectedMessage = getHasConnectedMessage(nickname);
         sendMessageToAll(session, room, hasConnectedMessage);
-        sessionsSet.add(session);
-        log.info("session opened and bound to room: " + room);
+        sessions.add(session);
+        log.info("Session opened and bound to room: " + room);
     }
 
     @OnMessage
     public void onMessage(final Session session, final ChatMessage chatMessage) {
         String room = (String) session.getUserProperties().get("room");
         try {
-            for (Session s : sessionsSet) {
+            for (Session s : sessions) {
                 if (s.isOpen()
                         && room.equals(s.getUserProperties().get("room"))) {
                     s.getBasicRemote().sendObject(chatMessage);
                 }
             }
         } catch (IOException | EncodeException e) {
-            log.log(Level.WARNING, "onMessage failed", e);
+            log.log(Level.SEVERE, "onMessage failed", e);
         }
     }
 
     @OnClose
-    public void close(final Session session, @PathParam("room") final String room) {
-        sessionsSet.remove(session);
-        String nickName = session.getRequestParameterMap().get("nickname").get(0);
-        ChatMessage hasDisconnectedMessage = getHasDisconnectedMessage(nickName);
+    public void close(final Session session, @PathParam("room") final String room,
+                      @PathParam("nickname") final String nickname) {
+        sessions.remove(session);
+        ChatMessage hasDisconnectedMessage = getHasDisconnectedMessage(nickname);
         sendMessageToAll(session, room, hasDisconnectedMessage);
-        log.info("session closed and unbound to room: " + room);
+        log.info("Session closed and unbound to room: " + room);
     }
 
     @OnError
     public void error(Throwable t) {
-        log.log(Level.SEVERE, t.getMessage());
         log.log(Level.SEVERE, "Connection error.");
+        throw new RuntimeException(t);
     }
 
     public static List<String> getLoggedInUsers() {
         List<String> loggedInUsers = new ArrayList<>();
-        for (Session s : sessionsSet) {
+        for (Session s : sessions) {
             loggedInUsers.add(s.getRequestParameterMap().get("nickname").get(0));
         }
         return loggedInUsers;
@@ -82,12 +82,16 @@ public class ChatEndpoint {
     private ChatMessage getHasConnectedMessage(String connectedUserName) {
         ChatMessage hasConnectedMessage = initializeChatMessage();
         hasConnectedMessage.setMessage(connectedUserName + " has connected.");
+        hasConnectedMessage.setConnected(true);
+        hasConnectedMessage.setSender(connectedUserName);
         return hasConnectedMessage;
     }
 
-    private ChatMessage getHasDisconnectedMessage(String connectedUserName) {
+    private ChatMessage getHasDisconnectedMessage(String disconnectedUserName) {
         ChatMessage hasDisconnectedMessage = initializeChatMessage();
-        hasDisconnectedMessage.setMessage(connectedUserName + " has disconnected.");
+        hasDisconnectedMessage.setMessage(disconnectedUserName + " has disconnected.");
+        hasDisconnectedMessage.setDisconnected(true);
+        hasDisconnectedMessage.setSender(disconnectedUserName);
         return hasDisconnectedMessage;
     }
 
