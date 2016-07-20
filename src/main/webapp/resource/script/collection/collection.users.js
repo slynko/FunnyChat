@@ -4,7 +4,9 @@ define(function(require) {
   var Backbone = require('backbone');
   
   var UsersCollection = Backbone.Collection.extend({
-    url: '/rest/users'
+    url: function() {
+      return '/rest/users/' + this.room;
+    }
   });
   
   return UsersCollection;

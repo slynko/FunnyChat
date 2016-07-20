@@ -29,6 +29,7 @@ define(function(require) {
       this.loggedInUsers.render(loggedInUsers);
     },
     afterRender: function() {
+      this.loggedInUsers.room = this.model.get('chatRoom');
       this.loggedInUsers.fetch();
 
       this.messagesView = new MessageView();

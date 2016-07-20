@@ -66,10 +66,12 @@ public class ChatEndpoint {
         throw new RuntimeException(t);
     }
 
-    public static List<String> getLoggedInUsers() {
+    public static List<String> getLoggedInUsersByRoom(String room) {
         List<String> loggedInUsers = new ArrayList<>();
         for (Session s : sessions) {
-            loggedInUsers.add(s.getRequestParameterMap().get("nickname").get(0));
+            if(room.equals(s.getUserProperties().get("room"))) {
+                loggedInUsers.add(s.getRequestParameterMap().get("nickname").get(0));
+            }
         }
         return loggedInUsers;
     }
@@ -81,17 +83,17 @@ public class ChatEndpoint {
 
     private ChatMessage getHasConnectedMessage(String connectedUserName) {
         ChatMessage hasConnectedMessage = initializeChatMessage();
+        hasConnectedMessage.setSender(connectedUserName);
         hasConnectedMessage.setMessage(connectedUserName + " has connected.");
         hasConnectedMessage.setConnected(true);
-        hasConnectedMessage.setSender(connectedUserName);
         return hasConnectedMessage;
     }
 
     private ChatMessage getHasDisconnectedMessage(String disconnectedUserName) {
         ChatMessage hasDisconnectedMessage = initializeChatMessage();
+        hasDisconnectedMessage.setSender(disconnectedUserName);
         hasDisconnectedMessage.setMessage(disconnectedUserName + " has disconnected.");
         hasDisconnectedMessage.setDisconnected(true);
-        hasDisconnectedMessage.setSender(disconnectedUserName);
         return hasDisconnectedMessage;
     }
 
