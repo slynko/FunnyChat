@@ -68,11 +68,11 @@ public class ChatEndpoint {
 
     public static List<String> getLoggedInUsersByRoom(String room) {
         List<String> loggedInUsers = new ArrayList<>();
-        for (Session s : sessions) {
-            if(room.equals(s.getUserProperties().get("room"))) {
-                loggedInUsers.add(s.getRequestParameterMap().get("nickname").get(0));
+        sessions.forEach((session) -> {
+            if(room.equals(session.getUserProperties().get("room"))) {
+                loggedInUsers.add(session.getRequestParameterMap().get("nickname").get(0));
             }
-        }
+        });
         return loggedInUsers;
     }
 

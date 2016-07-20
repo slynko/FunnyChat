@@ -15,7 +15,6 @@ import java.util.Map;
 @Path("/users")
 public class UsersRestService {
 
-
   @GET
   @Path("/{room}")
   @Produces(MediaType.APPLICATION_JSON)
