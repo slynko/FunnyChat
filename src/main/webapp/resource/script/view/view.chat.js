@@ -11,22 +11,20 @@ define(function(require) {
   var ChatView = Backbone.View.extend({
     template: _.template(template),
     events: {
-      'submit #do-chat': 'sendMessage'
+      'submit #do-chat': 'sendMessage',
+      'keydown': 'sendIsTypingMessage'
     },
     initialize: function(options) {
       this.options = options;
-      _.bindAll(this, 'onMessageReceived', 'handleSuccess');
       this.loggedInUsers = new UsersCollection();
+
       this.listenTo(this.loggedInUsers, 'sync', this.handleSuccess);
+      _.bindAll(this, 'onMessageReceived', 'handleSuccess');
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
       this.afterRender();
       return this;
-    },
-    handleSuccess: function(c, jsonResponse) {
-      var loggedInUsers = jsonResponse.users;
-      this.loggedInUsers.render(loggedInUsers);
     },
     afterRender: function() {
       this.loggedInUsers.room = this.model.get('chatRoom');
@@ -45,19 +43,26 @@ define(function(require) {
 
       $('#message', this.$el).focus();
     },
+    handleSuccess: function(c, jsonResponse) {
+      var loggedInUsers = jsonResponse.users;
+      this.loggedInUsers.render(loggedInUsers);
+    },
     onMessageReceived: function(evt) {
       var messageJson = JSON.parse(evt.data); // native API
-      messageJson.myNickname = this.model.get('nickName');
-      this.messagesView.append(messageJson);
-      
-      if (messageJson.hasConnected) {
-        this.loggedInUsers.append(messageJson.sender);
-      } else if (messageJson.hasDisconnected) {
-        this.loggedInUsers.remove(messageJson.sender);
+      if (!messageJson.isTyping) {
+        messageJson.myNickname = this.model.get('nickName');
+        this.messagesView.append(messageJson);
+
+        if (messageJson.hasConnected) {
+          this.loggedInUsers.append(messageJson.sender);
+        } else if (messageJson.hasDisconnected) {
+          this.loggedInUsers.remove(messageJson.sender);
+        }
+
+        this.scrollMessageView();
+      } else {
+        this.loggedInUsers.setTyping(messageJson.sender);
       }
-      
-      var $cont = $('.panel-body');
-      $cont[0].scrollTop = $cont[0].scrollHeight;
     },
     sendMessage: function() {
       var messageJsonString = this.getMessageJsonString();
@@ -67,14 +72,39 @@ define(function(require) {
       $('#message', this.$el).val('').focus();
       return false;
     },
+    sendIsTypingMessage: function() {
+      var messageJsonString = this.getIsTypingJsonString();
+
+      this.wsocket.send(messageJsonString);
+    },
     getMessageJsonString: function() {
       var nickName = this.model.get('nickName');
       var message = $('#message', this.$el).val();
-      
-      var messageJsonString = '{"message":"' + message + '", "sender":"'
-        + nickName + '", "received":"", "hasConnected":"", "hasDisconnected":""}';
-      
-      return messageJsonString;
+      var messageJson = {
+        message: message,
+        sender: nickName,
+        received: '',
+        hasConnected: '',
+        hasDisconnected: '',
+        isTyping: ''
+      };
+      return JSON.stringify(messageJson);
+    },
+    getIsTypingJsonString: function() {
+      var nickName = this.model.get('nickName');
+      var messageJson = {
+        message: '',
+        sender: nickName,
+        received: '',
+        hasConnected: '',
+        hasDisconnected: '',
+        isTyping: 'true'
+      };
+      return JSON.stringify(messageJson);
+    },
+    scrollMessageView: function() {
+      var $cont = $('.panel-body');
+      $cont[0].scrollTop = $cont[0].scrollHeight;
     }
   });
   

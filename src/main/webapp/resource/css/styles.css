@@ -138,3 +138,7 @@ body {
 .custom-container {
     width: 1050px !important;
 }
+
+#typing {
+    margin-right: 0;
+}

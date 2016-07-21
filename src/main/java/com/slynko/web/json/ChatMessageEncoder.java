@@ -12,6 +12,7 @@ import java.util.Date;
 import static com.slynko.web.json.constants.MessageFields.DATE_RECEIVED;
 import static com.slynko.web.json.constants.MessageFields.HAS_CONNECTED;
 import static com.slynko.web.json.constants.MessageFields.HAS_DISCONNECTED;
+import static com.slynko.web.json.constants.MessageFields.IS_TYPING;
 import static com.slynko.web.json.constants.MessageFields.MESSAGE;
 import static com.slynko.web.json.constants.MessageFields.SENDER;
 
@@ -32,6 +33,7 @@ public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
                 .add(DATE_RECEIVED, convertDateToString(chatMessage.getReceived()))
                 .add(HAS_CONNECTED, chatMessage.hasConnected())
                 .add(HAS_DISCONNECTED, chatMessage.hasDisconnected())
+                .add(IS_TYPING, chatMessage.isTyping())
                 .build()
                 .toString();
     }

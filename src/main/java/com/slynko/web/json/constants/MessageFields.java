@@ -8,5 +8,5 @@ public class MessageFields {
   public static final String DATE_RECEIVED = "received";
   public static final String HAS_CONNECTED = "hasConnected";
   public static final String HAS_DISCONNECTED = "hasDisconnected";
-
+  public static final String IS_TYPING = "isTyping";
 }

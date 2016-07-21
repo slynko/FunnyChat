@@ -12,6 +12,7 @@ import java.util.Date;
 
 import static com.slynko.web.json.constants.MessageFields.HAS_CONNECTED;
 import static com.slynko.web.json.constants.MessageFields.HAS_DISCONNECTED;
+import static com.slynko.web.json.constants.MessageFields.IS_TYPING;
 import static com.slynko.web.json.constants.MessageFields.MESSAGE;
 import static com.slynko.web.json.constants.MessageFields.SENDER;
 
@@ -33,6 +34,7 @@ public class ChatMessageDecoder implements Decoder.Text<ChatMessage> {
         chatMessage.setSender(jsonObject.getString(SENDER));
         chatMessage.setConnected(Boolean.parseBoolean(jsonObject.getString(HAS_CONNECTED)));
         chatMessage.setDisconnected(Boolean.parseBoolean(jsonObject.getString(HAS_DISCONNECTED)));
+        chatMessage.setTyping(Boolean.parseBoolean(jsonObject.getString(IS_TYPING)));
         chatMessage.setReceived(new Date());
         return chatMessage;
     }

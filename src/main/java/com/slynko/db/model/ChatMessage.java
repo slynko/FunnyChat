@@ -8,6 +8,7 @@ public class ChatMessage {
     private Date received;
     private boolean hasConnected;
     private boolean hasDisconnected;
+    private boolean isTyping;
 
     public String getMessage() {
         return message;
@@ -47,5 +48,13 @@ public class ChatMessage {
 
     public void setDisconnected(boolean hasDisconnected) {
         this.hasDisconnected = hasDisconnected;
+    }
+
+    public boolean isTyping() {
+        return isTyping;
+    }
+
+    public void setTyping(boolean typing) {
+        isTyping = typing;
     }
 }
