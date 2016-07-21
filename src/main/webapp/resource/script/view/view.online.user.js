@@ -45,9 +45,6 @@ define(function(require) {
           isTypingMessage.append('.');
         }, 400);
       }
-    },
-    unsetTyping: function(nickname) {
-      
     }
   });
   

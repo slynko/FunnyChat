@@ -24,4 +24,3 @@ define(function(require) {
     mainRouter.navigate('!/login');
   }
 );
-
