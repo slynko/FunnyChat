@@ -142,3 +142,7 @@ body {
 #typing {
     margin-right: 0;
 }
+
+.chat-main-wrapper fieldset{
+    width: 100%
+}
