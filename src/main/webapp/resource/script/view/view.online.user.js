@@ -28,23 +28,25 @@ define(function(require) {
       removingElement.remove();
     },
     setTyping: function(nickname) {
-      var start = Date.now();
       var isTypingElement = $('#' + nickname, this.$el);
       var isTypingMessage = $('#typing', isTypingElement);
       if (!isTypingMessage.html()) {
-        isTypingElement.append('<span id="typing" class="text-info">&nbsp;&nbsp;&nbsp;is typing .</span>');
-        isTypingMessage = $('#typing', isTypingElement);
-        var timer = setInterval(function() {
-          var timePassed = Date.now() - start;
-          if (timePassed >= 2000) {
-            
-            isTypingMessage.remove();
-            clearInterval(timer);
-            return;
-          }
-          isTypingMessage.append('.');
-        }, 400);
+        this.startTypingAnimation(isTypingElement, isTypingMessage);
       }
+    },
+    startTypingAnimation: function(isTypingElement, isTypingMessage) {
+      isTypingElement.append('<span id="typing" class="text-info">&nbsp;&nbsp;&nbsp;is typing .</span>');
+      isTypingMessage = $('#typing', isTypingElement);
+      var start = Date.now();
+      var timer = setInterval(function() {
+        var timePassed = Date.now() - start;
+        if (timePassed >= 2000) {
+          isTypingMessage.remove();
+          clearInterval(timer);
+          return;
+        }
+        isTypingMessage.append('.');
+      }, 400);
     }
   });
   

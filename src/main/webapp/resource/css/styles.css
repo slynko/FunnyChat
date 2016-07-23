@@ -146,3 +146,7 @@ body {
 .chat-main-wrapper fieldset{
     width: 100%
 }
+
+._emptyNickName {
+    display:none;
+}

@@ -15,13 +15,12 @@ define(function(require) {
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
-
       return this;
     },
     login: function(){
       this.initializeModelFields();
       
-      if (this.model.get('nickName')) {
+      if (this.model.get('nickName').trim()) {
         Backbone.history.navigate("!/chat/" + this.model.get('chatRoom'), true);
       } else {
         var emptyNickNameContainer = $('._emptyNickName', this.$el);

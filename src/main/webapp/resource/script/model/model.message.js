@@ -6,7 +6,7 @@ define(function(require) {
   var MessageModel = Backbone.Model.extend({
     defaults: {
       'received': 'dd/mm/yyyy',
-      'nickName': 'undefined',
+      'nickName': '',
       'messageContent': ''
     }
   });

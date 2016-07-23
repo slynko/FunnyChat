@@ -17,7 +17,6 @@ define(function(require) {
     initialize: function(options) {
       this.options = options;
       this.loggedInUsers = new UsersCollection();
-
       this.listenTo(this.loggedInUsers, 'sync', this.handleSuccess);
       _.bindAll(this, 'onMessageReceived', 'handleSuccess');
     },
@@ -36,12 +35,15 @@ define(function(require) {
       this.loggedInUsers = new OnlineUsersView();
       this.loggedInUsers.setElement($('.online-users-panel ._onlineUsers', this.$el));
 
-      var serviceLocation = "ws://" + window.location.host + "/chat/" ;
-      this.wsocket = new WebSocket(serviceLocation + this.model.get('chatRoom')
-          + "/" + this.model.get('nickName'));
-      this.wsocket.onmessage = this.onMessageReceived;
+      this.openWebSocketConnection();
 
       $('#message', this.$el).focus();
+    },
+    openWebSocketConnection: function() {
+      var serviceLocation = "ws://" + window.location.host + "/chat/" ;
+      this.wsocket = new WebSocket(serviceLocation + this.model.get('chatRoom')
+        + "/" + this.model.get('nickName'));
+      this.wsocket.onmessage = this.onMessageReceived;
     },
     handleSuccess: function(c, jsonResponse) {
       var loggedInUsers = jsonResponse.users;
@@ -66,15 +68,12 @@ define(function(require) {
     },
     sendMessage: function() {
       var messageJsonString = this.getMessageJsonString();
-      
       this.wsocket.send(messageJsonString);
-      
       $('#message', this.$el).val('').focus();
       return false;
     },
     sendIsTypingMessage: function() {
       var messageJsonString = this.getIsTypingJsonString();
-
       this.wsocket.send(messageJsonString);
     },
     getMessageJsonString: function() {
