@@ -67,8 +67,11 @@ define(function(require) {
       }
     },
     sendMessage: function() {
-      var messageJsonString = this.getMessageJsonString();
-      this.wsocket.send(messageJsonString);
+      if($('#message', this.$el).val().trim()) {
+        var messageJsonString = this.getMessageJsonString();
+        this.wsocket.send(messageJsonString);
+
+      }
       $('#message', this.$el).val('').focus();
       return false;
     },
