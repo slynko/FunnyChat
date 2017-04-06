@@ -1,4 +1,4 @@
-Web socket chat java. Welcome here!
+# FunnyChat
 
 Technologies used:  
 - Java WebSocket  
