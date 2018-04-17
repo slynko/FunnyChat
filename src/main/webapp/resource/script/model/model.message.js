@@ -3,13 +3,11 @@ define(function(require) {
 
   var Backbone = require('backbone');
 
-  var MessageModel = Backbone.Model.extend({
+  return Backbone.Model.extend({
     defaults: {
       'received': 'dd/mm/yyyy',
       'nickName': 'undefined',
       'messageContent': ''
     }
   });
-
-  return MessageModel;
 });

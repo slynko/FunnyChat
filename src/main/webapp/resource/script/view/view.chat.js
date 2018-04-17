@@ -8,16 +8,14 @@ define(function(require) {
     UsersCollection = require('collection/collection.users'),
     OnlineUsersView = require('view/view.online.user');
   
-  var ChatView = Backbone.View.extend({
+  return Backbone.View.extend({
     template: _.template(template),
     events: {
       'submit #do-chat': 'sendMessage',
       'keydown': 'sendIsTypingMessage'
     },
-    initialize: function(options) {
-      this.options = options;
+    initialize: function() {
       this.loggedInUsers = new UsersCollection();
-
       this.listenTo(this.loggedInUsers, 'sync', this.handleSuccess);
       _.bindAll(this, 'onMessageReceived', 'handleSuccess');
     },
@@ -107,6 +105,4 @@ define(function(require) {
       $cont[0].scrollTop = $cont[0].scrollHeight;
     }
   });
-  
-  return ChatView;
 });

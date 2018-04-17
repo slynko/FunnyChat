@@ -5,11 +5,8 @@ define(function(require) {
     _ = require('underscore'),
     template = require('text!template/online-users-template.html');
   
-  var OnlineUserView = Backbone.View.extend({
+  return Backbone.View.extend({
     template: _.template(template),
-    initialize: function(options) {
-      this.options = options;
-    },
     render: function(loggedInUsers) {
       var self = this;
       loggedInUsers.forEach(function(user) {
@@ -47,6 +44,4 @@ define(function(require) {
       }
     }
   });
-  
-  return OnlineUserView;
 });

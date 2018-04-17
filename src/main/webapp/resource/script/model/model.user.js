@@ -3,12 +3,10 @@ define(function(require) {
 
   var Backbone = require('backbone');
 
-  var UserModel = Backbone.Model.extend({
+  return Backbone.Model.extend({
     defaults: {
       'nickName': '',
       'chatRoom': '1'
     }
   });
-
-  return UserModel;
 });
