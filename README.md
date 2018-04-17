@@ -1,4 +1,4 @@
-# FunnyChat
+# InstantChat
 
 Technologies used:  
 - Java WebSocket  

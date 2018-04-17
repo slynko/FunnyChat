@@ -1,5 +1,8 @@
 package com.slynko.web.filter;
 
+import com.slynko.web.json.constants.Constant;
+import org.apache.commons.lang3.ObjectUtils;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -22,13 +25,7 @@ public class ContentTypeFilter implements Filter {
     chain.doFilter(request, response);
   }
 
-  public void init(FilterConfig config) throws ServletException {
-    String encodingParam = config.getInitParameter("encoding");
-    if (encodingParam != null) {
-      encoding = encodingParam;
-    } else {
-      encoding = "UTF-8";
-    }
+  public void init(FilterConfig config) {
+    encoding = ObjectUtils.defaultIfNull(config.getInitParameter("encoding"), Constant.ENCODING_DEFAULT);
   }
-
 }

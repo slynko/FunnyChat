@@ -10,6 +10,12 @@ public class ChatMessage {
     private boolean hasDisconnected;
     private boolean isTyping;
 
+    public ChatMessage() {
+        message = "";
+        received = new Date();
+        sender = "";
+    }
+
     public String getMessage() {
         return message;
     }

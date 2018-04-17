@@ -9,12 +9,12 @@ import javax.websocket.EndpointConfig;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.slynko.web.json.constants.MessageFields.DATE_RECEIVED;
-import static com.slynko.web.json.constants.MessageFields.HAS_CONNECTED;
-import static com.slynko.web.json.constants.MessageFields.HAS_DISCONNECTED;
-import static com.slynko.web.json.constants.MessageFields.IS_TYPING;
-import static com.slynko.web.json.constants.MessageFields.MESSAGE;
-import static com.slynko.web.json.constants.MessageFields.SENDER;
+import static com.slynko.web.json.constants.Constant.DATE_RECEIVED;
+import static com.slynko.web.json.constants.Constant.HAS_CONNECTED;
+import static com.slynko.web.json.constants.Constant.HAS_DISCONNECTED;
+import static com.slynko.web.json.constants.Constant.IS_TYPING;
+import static com.slynko.web.json.constants.Constant.MESSAGE;
+import static com.slynko.web.json.constants.Constant.SENDER;
 
 public class ChatMessageEncoder implements Encoder.Text<ChatMessage> {
     @Override
