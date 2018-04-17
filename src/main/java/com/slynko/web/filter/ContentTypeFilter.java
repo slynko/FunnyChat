@@ -18,7 +18,8 @@ public class ContentTypeFilter implements Filter {
   public void destroy() {
   }
 
-  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+      throws ServletException, IOException {
     request.setCharacterEncoding(encoding);
     response.setContentType("charset=" + encoding);
     response.setCharacterEncoding(encoding);

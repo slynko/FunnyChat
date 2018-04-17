@@ -1,6 +1,6 @@
 package com.slynko.web.endpoint;
 
-import com.slynko.db.model.ChatMessage;
+import com.slynko.db.model.Message;
 import com.slynko.web.json.ChatMessageDecoder;
 import com.slynko.web.json.ChatMessageEncoder;
 
@@ -23,25 +23,25 @@ import java.util.stream.Collectors;
 
 @ServerEndpoint(value="/chat/{room}/{nickname}", encoders = ChatMessageEncoder.class, decoders = ChatMessageDecoder.class)
 public class ChatEndpoint {
-    private final Logger LOG = Logger.getLogger(getClass().getName());
+    private static final Logger LOG = Logger.getLogger(ChatEndpoint.class.getName());
+
     private static final Set<Session> sessions = Collections.synchronizedSet(new HashSet<>());
 
     @OnOpen
     public void open(final Session session,
         @PathParam("room") final String room,
         @PathParam("nickname") final String nickname) {
-        ChatMessage hasConnectedMessage = ChatUtils.getHasConnectedMessage(nickname);
-        sendMessageToAll(session, room, hasConnectedMessage);
+        messageAll(session, room, ChatUtils.getHasConnectedMessage(nickname));
         sessions.add(session);
         LOG.info("Session opened and bound to room: " + room);
     }
 
     @OnMessage
-    public void onMessage(final Session session, final ChatMessage chatMessage) {
-        String room = (String) session.getUserProperties().get("room");
+    public void onMessage(final Session session, final Message chatMessage) {
             sessions.stream()
                 .filter(Session::isOpen)
-                .filter(s -> room.equals(s.getUserProperties().get("room")))
+                .filter(s -> session.getUserProperties().get("room")
+                    .equals(s.getUserProperties().get("room")))
                 .map(Session::getBasicRemote)
                 .forEach(basicRemote -> {
                     try {
@@ -58,14 +58,14 @@ public class ChatEndpoint {
         @PathParam("room") final String room,
         @PathParam("nickname") final String nickname) {
         sessions.remove(session);
-        sendMessageToAll(session, room, ChatUtils.getHasDisconnectedMessage(nickname));
+        messageAll(session, room, ChatUtils.getHasDisconnectedMessage(nickname));
         LOG.info("Session closed and unbound to room: " + room);
     }
 
     @OnError
-    public void error(Throwable t) {
+    public void error(Throwable throwable) {
         LOG.log(Level.SEVERE, "Connection error.");
-        throw new RuntimeException(t);
+        throw new RuntimeException(throwable);
     }
 
     public static List<String> getLoggedInUsersByRoom(String room) {
@@ -75,7 +75,7 @@ public class ChatEndpoint {
             .collect(Collectors.toList());
     }
 
-    private void sendMessageToAll(final Session session, final String room, ChatMessage message) {
+    private void messageAll(final Session session, final String room, Message message) {
         session.getUserProperties().put("room", room);
         onMessage(session, message);
     }

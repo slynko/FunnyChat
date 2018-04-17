@@ -2,7 +2,7 @@ package com.slynko.db.model;
 
 import java.util.Date;
 
-public class ChatMessage {
+public class Message {
     private String message;
     private String sender;
     private Date received;
@@ -10,7 +10,7 @@ public class ChatMessage {
     private boolean hasDisconnected;
     private boolean isTyping;
 
-    public ChatMessage() {
+    public Message() {
         message = "";
         received = new Date();
         sender = "";

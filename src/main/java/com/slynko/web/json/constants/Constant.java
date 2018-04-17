@@ -11,5 +11,6 @@ public class Constant {
   public static final String IS_TYPING = "isTyping";
 
   public static final String ENCODING_DEFAULT = "UTF-8";
+  public static final String DATE_FORMAT_DEFAULT = "HH:mm MMM dd, yyyy";
 
 }
