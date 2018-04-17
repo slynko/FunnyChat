@@ -6,7 +6,7 @@ define(function(require) {
     ChatView = require('view/view.chat'),
     UserModel = require('model/model.user');
 
-  var MainRouter = Backbone.Router.extend({
+  return Backbone.Router.extend({
     initialize: function() {
       this.chatContainer = $('.chat-main-wrapper');
       this.userModel = new UserModel();
@@ -36,6 +36,4 @@ define(function(require) {
       view.model = model;
     }
   });
-
-  return MainRouter;
 });

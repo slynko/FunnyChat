@@ -5,13 +5,10 @@ define(function(require) {
     _ = require('underscore'),
     template = require('text!template/login-template.html');
   
-  var LoginView = Backbone.View.extend({
+  return Backbone.View.extend({
     template: _.template(template),
     events: {
       'submit .form-signin': 'login'
-    },
-    initialize: function(options) {
-      this.options = options;
     },
     render: function() {
       this.$el.html(this.template(this.model.toJSON()));
@@ -24,9 +21,9 @@ define(function(require) {
       if (this.model.get('nickName')) {
         Backbone.history.navigate("!/chat/" + this.model.get('chatRoom'), true);
       } else {
-        var emptyNickNameContainer = $('._emptyNickName', this.$el);
-        emptyNickNameContainer.html('Your nickname is empty');
-        emptyNickNameContainer.show();
+        var messageContainer = $('._emptyNickName', this.$el);
+        messageContainer.html('Your nickname is empty');
+        messageContainer.show();
       }
       return false;
     },
@@ -40,6 +37,4 @@ define(function(require) {
       });
     }
   });
-  
-  return LoginView;
 });
