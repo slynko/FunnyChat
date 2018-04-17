@@ -19,5 +19,4 @@ public class UsersRestService {
   public String findAll(@PathParam("room") String room) {
     return new Gson().toJson(ImmutableMap.of("users", ChatEndpoint.getLoggedInUsersByRoom(room)));
   }
-
 }
